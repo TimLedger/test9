@@ -5,6 +5,7 @@ import { categoryList } from "../../store/categoriesThunk";
 import { Link, Outlet } from 'react-router-dom';
 import Preloader from "../../components/Preloader/Preloader";
 import BtnPreloader from "../../components/Preloader/BtnPreloader";
+import dayjs from "dayjs";
 import './TransactionList.css';
 
 const TransactionList = () => {
@@ -44,12 +45,12 @@ const TransactionList = () => {
                 <li key={transaction.id} className="transaction-item">                  
                   <div className="transaction-btns">
                     <h3 className="transaction-name">{category ? category.name : ''}</h3>
-                    <span className="transaction-time">{transaction.time}</span>
+                    <span className="transaction-time">{dayjs(transaction.time).format('DD.MM.YYYY HH:mm:ss')}</span>
                   </div>
                   <div className="transaction-item-inner">
-                    <span className="transaction-type">{transaction.amount}</span>
+                    <span className="transaction-type" style={{color: transaction.type === 'Доход' ? "#369f16" : "#ff0000"}}>{transaction.amount} KGS</span>
                     <div className="transaction-btns">
-                      <Link className="transaction-btn" to={'/categories/' + transaction.id + '/edit'}>Изменить</Link>
+                      <Link className="transaction-btn" to={'/transaction/' + transaction.id + '/edit'}>Изменить</Link>
                       <button className="transaction-btn delete-btn" onClick={() => deleteCategory(transaction.id)}>
                         {loading.deleteLoading ? <BtnPreloader /> : 'Удалить'}
                       </button>

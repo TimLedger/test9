@@ -42,6 +42,11 @@ export const transactionList = createAsyncThunk<Transactions[], undefined>(
                     id: key,
                 };
             });
+        newTransaction.sort((a, b) => {
+          const dateA = new Date(a.time).getTime();
+          const dateB = new Date(b.time).getTime();
+          return dateB - dateA;
+        });
         }
 
         return newTransaction;
