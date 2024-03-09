@@ -21,7 +21,7 @@ const App: React.FC = () => {
             </Route>
             <Route path="/categories" element={<CategoryList />} >
               <Route path="add-categories" element={<CategoryForm />} />
-              <Route path="categories/:id/edit" element={<CategoryForm />} />
+              <Route path=":id/edit" element={<CategoryForm />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

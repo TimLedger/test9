@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import { categoryAdd } from "../../store/categoriesThunk";
+import { categoryAdd, categoryEdit, categoryOne } from "../../store/categoriesThunk";
 import Preloader from '../../components/Preloader/Preloader';
 import { Category } from '../../types';
 import './CategoryForm.css';
 
 const CategoryForm = () => {
+  const params = useParams();
   const navigate = useNavigate();
+  const category = useAppSelector(state => state.categories.category);
   const loading = useAppSelector(state => state.categories);
   const dispatch = useAppDispatch();
+  const [editMode, setEditMode] = useState<boolean>(false);
   const [filling, setFilling] = useState<Category>({
     type: '',
     name: '',
@@ -25,6 +28,26 @@ const CategoryForm = () => {
     return text.split('').map(char => rusToEngMap[char] || char).join('');
   };
 
+  useEffect(() => {
+    if (params.id) {
+      dispatch(categoryOne(params.id));
+      setEditMode(true);
+    } else {
+      setFilling({
+        type: '',
+        name: '',
+      });
+      setEditMode(false);
+    }
+  }, [dispatch, params.id]);
+
+  
+  useEffect(() => {
+      if (editMode && category) {
+        setFilling(category);
+      }
+  }, [editMode, category]);
+  
   const categoryChanged = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
       const { name, value } = event.target;
       setFilling(prevState => ({
@@ -35,9 +58,12 @@ const CategoryForm = () => {
 
   const onFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const categoryId = russianToTranslit(filling.name).toLowerCase().replace(/\s+/g, '-');
-    await dispatch(categoryAdd({ id: categoryId, data: filling }));
-    
+    if (params.id) {
+      await dispatch(categoryEdit({ id: params.id, data: filling }));
+    } else {
+      const categoryId = russianToTranslit(filling.name.toLowerCase()).replace(/\s+/g, '-');
+      await dispatch(categoryAdd({ id: categoryId, data: filling }));
+    }
     navigate('/categories');
   };
 
@@ -76,9 +102,11 @@ const CategoryForm = () => {
               />
             </div>
           </div>
-          { loading.postLoading ? (<Preloader />) : (
+          { loading.postLoading || loading.editLoading ? (<Preloader />) : (
             <div className='form-bottom'>
-              <button type="submit" className='form-btn'>Создать Категорию</button>                  
+              <button type="submit" className='form-btn'>
+                {params.id ? 'Сохранить изменения' : 'Создать Категорию'}
+              </button>                  
             </div>
           )}
         </form>
