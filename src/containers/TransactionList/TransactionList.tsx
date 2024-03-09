@@ -14,6 +14,11 @@ const TransactionList = () => {
   const categories = useAppSelector((state) => state.categories.categories); 
   const loading = useAppSelector((state) => state.transactions);
 
+  const total = transactions.reduce((acc, transaction) => {
+    acc += transaction.amount;
+    return acc;
+  }, 0);
+
   useEffect(() => {
     dispatch(transactionList());
     dispatch(categoryList());
@@ -30,7 +35,7 @@ const TransactionList = () => {
     <div>
       <div className="menu-inner">
           <h3 className="menu-title">Транзакции</h3>
-          <span className="total-sum">Итог</span>
+          <span className="total-sum" style={{borderColor: total > 0 ? "#369f16" : "#ff0000", color: total > 0 ? "#369f16" : "#ff0000"}}>{total} KGS</span>
       </div>
       {loading.getLoading ? (
         <Preloader />
