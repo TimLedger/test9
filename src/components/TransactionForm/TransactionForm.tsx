@@ -121,18 +121,20 @@ const TransactionForm: React.FC = () => {
                     </option>
                 ))}
               </select>
-              <input
-                id="amount"
-                type="number"
-                name="amount"
-                value={filling.amount}
-                onChange={transactionChanged}
-                className="form-input"
-                placeholder='Категория'
-                required
-                min={0}
-              />
-              <span className="input-currency">KGS</span>
+              <div className='input-price'>
+                <input
+                  id="amount"
+                  type="number"
+                  name="amount"
+                  value={filling.amount}
+                  onChange={transactionChanged}
+                  className="form-input"
+                  placeholder='Категория'
+                  required
+                  min={0}
+                />
+                <span className="input-currency">KGS</span>
+              </div>
             </div>
           </div>
           { loading.postLoading || loading.editLoading ? (<Preloader />) : (
