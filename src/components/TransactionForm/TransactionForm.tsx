@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import { transactionAdd, transactionEdit, transactionOne } from "../../store/transactionsThunks";
+import { transactionAdd, transactionEdit, transactionOne, transactionList } from "../../store/transactionsThunk";
 import {Transaction} from '../../types';
 import Preloader from '../Preloader/Preloader';
 import './TransactionForm.css';
@@ -78,6 +78,7 @@ const TransactionForm: React.FC = () => {
       };
       await dispatch(transactionAdd(transactionData));
     }
+    await dispatch(transactionList());
     navigate('/');
   };
 

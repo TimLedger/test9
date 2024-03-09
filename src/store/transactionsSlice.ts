@@ -1,19 +1,23 @@
-import { Transaction } from "../types";
+import { Transaction, Transactions } from "../types";
 import { createSlice } from "@reduxjs/toolkit";
-import { transactionAdd, transactionOne, transactionEdit } from "./transactionsThunks";
+import { transactionAdd, transactionOne, transactionEdit, transactionList, transactionDelete } from "./transactionsThunk";
 
 interface TransactionsState {
+  transactions: Transactions[] | [];
   transaction: Transaction | null;
   postLoading: boolean;
   getLoading: boolean;
   editLoading: boolean;
+  deleteLoading: boolean;
 }
 
 const initialState: TransactionsState = {
+  transactions: [],
   transaction: null,
   postLoading: false,
   getLoading: false,
   editLoading: false,
+  deleteLoading: false,
 };
 
 const transactionsSlice = createSlice({
@@ -50,6 +54,27 @@ const transactionsSlice = createSlice({
         });
         builder.addCase(transactionEdit.rejected, state => {
             state.editLoading = false;
+        });
+
+        builder.addCase(transactionList.pending, state => {
+            state.getLoading = true;
+        });
+        builder.addCase(transactionList.fulfilled, (state, {payload}) => {
+            state.getLoading = false;
+            state.transactions = payload;
+        });
+        builder.addCase(transactionList.rejected, state => {
+            state.getLoading = false;
+        });
+
+        builder.addCase(transactionDelete.pending, state => {
+            state.deleteLoading = true;
+        });
+        builder.addCase(transactionDelete.fulfilled, (state) => {
+            state.deleteLoading = false;
+        });
+        builder.addCase(transactionDelete.rejected, state => {
+            state.deleteLoading = false;
         });
     },
 });

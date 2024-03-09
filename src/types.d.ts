@@ -17,3 +17,16 @@ export interface Transaction {
   amount: number;
   time: string;
 }
+
+export interface Transactions extends Transaction {
+  id: string;
+}
+
+export interface TransactionWithCategory {
+  id: string;
+  categories: Category[];
+}
+
+export interface ApiTransaction {
+  [id: string]: Transaction
+}

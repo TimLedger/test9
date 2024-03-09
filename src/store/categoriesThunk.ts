@@ -33,10 +33,10 @@ export const categoryList = createAsyncThunk<Categories[], undefined>(
     async () => {
         const response = await axiosApi.get<ApiCategory | null>('/categorylist.json');
         const responseData = response.data;
-        let newDish: Categories[] = [];
+        let newCategory: Categories[] = [];
 
         if (responseData) {
-            newDish = Object.keys(responseData).map((key) => {
+            newCategory = Object.keys(responseData).map((key) => {
                 return {
                     ...responseData[key],
                     id: key,
@@ -44,7 +44,7 @@ export const categoryList = createAsyncThunk<Categories[], undefined>(
             });
         }
 
-        return newDish;
+        return newCategory;
     },
 );
 
