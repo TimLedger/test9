@@ -1,8 +1,9 @@
-import { Category } from "../types";
+import { Category, Categories } from "../types";
 import { createSlice } from "@reduxjs/toolkit";
-import { categoryAdd, categoryOne, categoryEdit } from "./categoriesThunk";
+import { categoryAdd, categoryOne, categoryEdit, categoryList } from "./categoriesThunk";
 
 interface CategoriesState {
+    categories: Categories[] | [];
     category: Category | null;
     postLoading: boolean;
     getLoading: boolean;
@@ -10,6 +11,7 @@ interface CategoriesState {
 }
 
 const initialState: CategoriesState = {
+    categories: [],
     category: null,
     postLoading: false,
     getLoading: false,
@@ -50,6 +52,17 @@ const categoriesSlice = createSlice({
         });
         builder.addCase(categoryEdit.rejected, state => {
             state.editLoading = false;
+        });
+
+        builder.addCase(categoryList.pending, state => {
+            state.getLoading = true;
+        });
+        builder.addCase(categoryList.fulfilled, (state, {payload}) => {
+            state.getLoading = false;
+            state.categories = payload;
+        });
+        builder.addCase(categoryList.rejected, state => {
+            state.getLoading = false;
         });
     },
 });
