@@ -1,6 +1,6 @@
 import { Category, Categories } from "../types";
 import { createSlice } from "@reduxjs/toolkit";
-import { categoryAdd, categoryOne, categoryEdit, categoryList } from "./categoriesThunk";
+import { categoryAdd, categoryOne, categoryEdit, categoryList, categoryDelete } from "./categoriesThunk";
 
 interface CategoriesState {
     categories: Categories[] | [];
@@ -8,6 +8,7 @@ interface CategoriesState {
     postLoading: boolean;
     getLoading: boolean;
     editLoading: boolean;
+    deleteLoading: boolean;
 }
 
 const initialState: CategoriesState = {
@@ -16,6 +17,7 @@ const initialState: CategoriesState = {
     postLoading: false,
     getLoading: false,
     editLoading: false,
+    deleteLoading: false,
 };
 
 const categoriesSlice = createSlice({
@@ -63,6 +65,16 @@ const categoriesSlice = createSlice({
         });
         builder.addCase(categoryList.rejected, state => {
             state.getLoading = false;
+        });
+
+        builder.addCase(categoryDelete.pending, state => {
+            state.deleteLoading = true;
+        });
+        builder.addCase(categoryDelete.fulfilled, (state) => {
+            state.deleteLoading = false;
+        });
+        builder.addCase(categoryDelete.rejected, state => {
+            state.deleteLoading = false;
         });
     },
 });

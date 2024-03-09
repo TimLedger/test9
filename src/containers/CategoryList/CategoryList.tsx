@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { categoryList } from "../../store/categoriesThunk";
+import { categoryDelete, categoryList } from "../../store/categoriesThunk";
 import { Link, Outlet } from 'react-router-dom';
 import Preloader from "../../components/Preloader/Preloader";
+import BtnPreloader from "../../components/Preloader/BtnPreloader";
 import './CategoryList.css';
 
 const CategoryList = () => {
@@ -14,6 +15,13 @@ const CategoryList = () => {
     dispatch(categoryList());
   }, [dispatch]);
 
+  const deleteCategory = async (id: string) => {
+    if (confirm('Вы точно хотите удалить эту категорию?')) {
+      await dispatch(categoryDelete(id));
+      await dispatch(categoryList());
+    }
+  };
+
   return (
     <div>
       <div className="menu-inner">
@@ -23,17 +31,20 @@ const CategoryList = () => {
       {loading.getLoading ? (
         <Preloader />
       ) : (
-        <ul>
+        <ul className="category-list">
           {categories.length < 1 ? (
             <h2>Категорий еще нет!</h2>
           ) : (
-            categories.map((dish) => (
-              <li key={dish.id} className="dish-item">
-                <h3 className="dish-name">{dish.name}</h3>
-                <div className="dish-item-inner">
-                  <span className="dish-type">{dish.type}</span>
-                  <div className="dish-btns">
-                    <Link className="dish-btn" to={'/admin/' + dish.id + '/edit'}>Изменить</Link>
+            categories.map((category) => (
+              <li key={category.id} className="category-item">
+                <h3 className="category-name">{category.name}</h3>
+                <div className="category-item-inner">
+                  <span className="category-type">{category.type}</span>
+                  <div className="category-btns">
+                    <Link className="category-btn" to={'/categories/' + category.id + '/edit'}>Изменить</Link>
+                    <button className="category-btn delete-btn" onClick={() => deleteCategory(category.id)}>
+                      {loading.deleteLoading ? <BtnPreloader /> : 'Удалить'}
+                    </button>
                   </div>
                 </div>
               </li>

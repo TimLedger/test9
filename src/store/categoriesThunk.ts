@@ -47,3 +47,10 @@ export const categoryList = createAsyncThunk<Categories[], undefined>(
         return newDish;
     },
 );
+
+export const categoryDelete = createAsyncThunk(
+    "category/delete",
+    async (id: string) => {
+        await axiosApi.delete('/categorylist/' + id + '.json');
+    },
+);

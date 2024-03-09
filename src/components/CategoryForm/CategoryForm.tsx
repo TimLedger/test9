@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import { categoryAdd, categoryEdit, categoryOne } from "../../store/categoriesThunk";
+import { categoryAdd, categoryEdit, categoryOne, categoryList } from "../../store/categoriesThunk";
 import Preloader from '../../components/Preloader/Preloader';
 import { Category } from '../../types';
 import './CategoryForm.css';
@@ -64,6 +64,7 @@ const CategoryForm = () => {
       const categoryId = russianToTranslit(filling.name.toLowerCase()).replace(/\s+/g, '-');
       await dispatch(categoryAdd({ id: categoryId, data: filling }));
     }
+    await dispatch(categoryList());
     navigate('/categories');
   };
 
@@ -71,9 +72,7 @@ const CategoryForm = () => {
     <div>
       <div className='modal'>
         <div className='modal-top'>
-          <Link className='modal-close' to="/categories">
-            закрыть
-          </Link>
+          <Link className='modal-close' to="/categories"></Link>
         </div>
         <form onSubmit={onFormSubmit} autoComplete="off" className="form">
           <div className='form-content'>
@@ -86,9 +85,9 @@ const CategoryForm = () => {
                 className="form-input"
                 required
               >
-              <option value="">Выберите тип</option>
-              <option value="income">Доход</option>
-              <option value="expense">Расход</option>
+              <option className="form-option" value="">Выберите тип</option>
+              <option className="form-option" value="Доход">Доход</option>
+              <option className="form-option" value="Расход">Расход</option>
               </select>
               <input
                 id="name"
