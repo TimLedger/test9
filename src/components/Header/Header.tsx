@@ -8,7 +8,7 @@ const Header = () => {
             <div className="container">
                 <div className="header-inner">
                     <NavLink className={'logo'} to="/" end>
-                        <h3>Пицца</h3>
+                        <h3>Финансы</h3>
                     </NavLink>
                     <Toolbar />
                 </div>
